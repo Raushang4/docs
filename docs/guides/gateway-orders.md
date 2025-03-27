@@ -227,3 +227,41 @@ try {
 ```
 
 We pass in the `token`, `amount`, `rate`, `senderFeeRecipient`, `senderFee`, `refundAddress`, `messageHash` respectively. Then we get back the `emittedCreatedOrder` event that's logged.
+
+## Building a Demo App with UI
+
+To help you understand how to integrate the Gateway contract into an external app, we have created a demo app with a user interface. This demo app demonstrates how to interact with the Gateway contract to create off-ramp orders.
+
+### Step-by-Step Guide
+
+1. **Clone the Demo App Repository**: Start by cloning the demo app repository from GitHub. You can find the repository [here](https://github.com/paycrest/demo-app).
+
+   ```bash
+   git clone https://github.com/paycrest/demo-app.git
+   cd demo-app
+   ```
+
+2. **Install Dependencies**: Install the required dependencies for the demo app.
+
+   ```bash
+   npm install
+   ```
+
+3. **Configure Environment Variables**: Create a `.env` file in the root directory of the project and add the necessary environment variables. You can find the required variables in the `.env.example` file.
+
+4. **Run the App**: Start the development server to run the demo app.
+
+   ```bash
+   npm start
+   ```
+
+5. **Explore the Code**: Open the project in your favorite code editor and explore the code to understand how the integration with the Gateway contract is implemented.
+
+6. **Test the App**: Use the demo app to create off-ramp orders and see how it interacts with the Gateway contract.
+
+## Submissions for Review
+
+If you have built your own app or made modifications to the demo app, you can submit your work for review. Please use the following [Dropbox link](https://dropbox.com/) to submit your app for review.
+
+We look forward to seeing your submissions and providing feedback!
+
