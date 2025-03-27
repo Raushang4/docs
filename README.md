@@ -24,6 +24,25 @@ $ yarn build
 
 This command generates static content into the `build` directory and can be served using any static contents hosting service.
 
+### Bonadocs Playground Setup
+
+To set up and use the Bonadocs playground for interacting with Paycrest's gateway contract and APIs, follow these steps:
+
+1. **Create a Bonadocs Playground**:
+   - Go to [Bonadocs](https://bonadocs.com) and create a new playground.
+   - Add both USDT and the gateway contract on the chains where the gateway is deployed.
+
+2. **Add Bonadocs Actions**:
+   - Update the `docs/api.md` file to include Bonadocs actions for querying API endpoints using the `fetch` API in JavaScript.
+   - Update the `docs/contracts/Gateway.md` file to include Bonadocs actions for interacting with the gateway contract to create orders.
+
+3. **Configure Docusaurus**:
+   - Update the `docusaurus.config.js` file to include Bonadocs playground configuration.
+
+4. **Run the Playground**:
+   - Start the local development server using `yarn start`.
+   - Access the Bonadocs playground through the documentation site.
+
 ## Contributing
 
 We welcome contributions to the Paycrest docs! To get started, follow these steps:
