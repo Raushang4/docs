@@ -216,3 +216,278 @@ Once you deploy your server and get the endpoint, you can listen to payment orde
 If pending, your frontend would have to continue pollling till it gets back a conclusive response - either `expired`, `settled`, or `refunded`. 
 
 **P.S**: This backend structure can be done in any custom way depending on your app as long as the webhook validates and stores the correct payload sent to it.
+
+## Step-by-Step Tutorial: Building a Payment App with Sender API
+
+In this tutorial, we will build a simple payment app that integrates the Sender API to enable off-ramp for users. The app will have a UI to interact with the API and handle the webhook logic.
+
+### Prerequisites
+
+Before we start, make sure you have the following installed:
+
+- Node.js
+- npm or yarn
+- A code editor (e.g., Visual Studio Code)
+
+### Step 1: Set Up the Project
+
+1. Create a new directory for your project and navigate into it:
+
+   ```bash
+   mkdir payment-app
+   cd payment-app
+   ```
+
+2. Initialize a new Node.js project:
+
+   ```bash
+   npm init -y
+   ```
+
+3. Install the required dependencies:
+
+   ```bash
+   npm install express body-parser axios
+   ```
+
+### Step 2: Create the Server
+
+1. Create a new file named `server.js` in the root of your project directory.
+
+2. Add the following code to `server.js` to set up a basic Express server:
+
+   ```javascript
+   const express = require('express');
+   const bodyParser = require('body-parser');
+   const axios = require('axios');
+
+   const app = express();
+   const port = 3000;
+
+   app.use(bodyParser.json());
+
+   app.listen(port, () => {
+     console.log(`Server is running on http://localhost:${port}`);
+   });
+   ```
+
+### Step 3: Create the Webhook Endpoint
+
+1. Add the following code to `server.js` to create the webhook endpoint:
+
+   ```javascript
+   app.post('/webhook', async (req, res) => {
+     const signature = req.get('X-Paycrest-Signature');
+     if (!signature) return res.status(401).send('Invalid signature');
+
+     if (!verifyPaycrestSignature(req.body, signature, process.env.CLIENT_SECRET)) {
+       return res.status(401).send('Invalid signature');
+     }
+
+     console.log('Webhook received:', req.body);
+
+     // Save the transaction to the database (you can use any database of your choice)
+     // For simplicity, we'll just log the transaction to the console
+
+     res.status(200).send('Webhook received');
+   });
+
+   function verifyPaycrestSignature(requestBody, signatureHeader, secretKey) {
+     const calculatedSignature = calculateHmacSignature(requestBody, secretKey);
+     return signatureHeader === calculatedSignature;
+   }
+
+   function calculateHmacSignature(data, secretKey) {
+     const key = Buffer.from(secretKey);
+     const hash = crypto.createHmac('sha256', key);
+     hash.update(data);
+     return hash.digest('hex');
+   }
+   ```
+
+### Step 4: Create the Frontend
+
+1. Create a new directory named `public` in the root of your project directory.
+
+2. Create a new file named `index.html` inside the `public` directory.
+
+3. Add the following code to `index.html` to create a simple UI for the payment app:
+
+   ```html
+   <!DOCTYPE html>
+   <html lang="en">
+   <head>
+     <meta charset="UTF-8">
+     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+     <title>Payment App</title>
+   </head>
+   <body>
+     <h1>Payment App</h1>
+     <form id="payment-form">
+       <label for="amount">Amount:</label>
+       <input type="number" id="amount" name="amount" required>
+       <br>
+       <label for="token">Token:</label>
+       <input type="text" id="token" name="token" required>
+       <br>
+       <label for="network">Network:</label>
+       <input type="text" id="network" name="network" required>
+       <br>
+       <label for="institution">Institution:</label>
+       <input type="text" id="institution" name="institution" required>
+       <br>
+       <label for="accountIdentifier">Account Identifier:</label>
+       <input type="text" id="accountIdentifier" name="accountIdentifier" required>
+       <br>
+       <label for="accountName">Account Name:</label>
+       <input type="text" id="accountName" name="accountName" required>
+       <br>
+       <label for="memo">Memo:</label>
+       <input type="text" id="memo" name="memo">
+       <br>
+       <label for="returnAddress">Return Address:</label>
+       <input type="text" id="returnAddress" name="returnAddress" required>
+       <br>
+       <label for="reference">Reference:</label>
+       <input type="text" id="reference" name="reference" required>
+       <br>
+       <button type="submit">Create Order</button>
+     </form>
+     <div id="order-details"></div>
+     <script>
+       document.getElementById('payment-form').addEventListener('submit', async (event) => {
+         event.preventDefault();
+
+         const formData = new FormData(event.target);
+         const orderParams = {
+           amount: formData.get('amount'),
+           token: formData.get('token'),
+           network: formData.get('network'),
+           recipient: {
+             institution: formData.get('institution'),
+             accountIdentifier: formData.get('accountIdentifier'),
+             accountName: formData.get('accountName'),
+             memo: formData.get('memo'),
+           },
+           returnAddress: formData.get('returnAddress'),
+           reference: formData.get('reference'),
+         };
+
+         try {
+           const response = await fetch('/create-order', {
+             method: 'POST',
+             headers: { 'Content-Type': 'application/json' },
+             body: JSON.stringify(orderParams),
+           });
+
+           const orderDetails = await response.json();
+           document.getElementById('order-details').innerText = JSON.stringify(orderDetails, null, 2);
+         } catch (error) {
+           console.error('Error creating order:', error);
+         }
+       });
+     </script>
+   </body>
+   </html>
+   ```
+
+### Step 5: Create the Order Endpoint
+
+1. Add the following code to `server.js` to create the order endpoint:
+
+   ```javascript
+   app.post('/create-order', async (req, res) => {
+     const orderParams = req.body;
+
+     try {
+       const response = await axios.post('https://api.paycrest.io/v1/sender/orders', orderParams, {
+         headers: { 'API-Key': '208a4aef-1320-4222-82b4-e3bca8781b4b' },
+       });
+
+       res.json(response.data);
+     } catch (error) {
+       console.error('Error creating order:', error);
+       res.status(500).send('Error creating order');
+     }
+   });
+   ```
+
+### Step 6: Run the App
+
+1. Start the server:
+
+   ```bash
+   node server.js
+   ```
+
+2. Open your browser and navigate to `http://localhost:3000`.
+
+3. Fill in the form with the required details and click "Create Order".
+
+4. The order details will be displayed on the page.
+
+### Step 7: Handle Webhook Events
+
+1. Add the following code to `server.js` to handle webhook events:
+
+   ```javascript
+   app.post('/webhook', async (req, res) => {
+     const signature = req.get('X-Paycrest-Signature');
+     if (!signature) return res.status(401).send('Invalid signature');
+
+     if (!verifyPaycrestSignature(req.body, signature, process.env.CLIENT_SECRET)) {
+       return res.status(401).send('Invalid signature');
+     }
+
+     console.log('Webhook received:', req.body);
+
+     // Save the transaction to the database (you can use any database of your choice)
+     // For simplicity, we'll just log the transaction to the console
+
+     res.status(200).send('Webhook received');
+   });
+
+   function verifyPaycrestSignature(requestBody, signatureHeader, secretKey) {
+     const calculatedSignature = calculateHmacSignature(requestBody, secretKey);
+     return signatureHeader === calculatedSignature;
+   }
+
+   function calculateHmacSignature(data, secretKey) {
+     const key = Buffer.from(secretKey);
+     const hash = crypto.createHmac('sha256', key);
+     hash.update(data);
+     return hash.digest('hex');
+   }
+   ```
+
+### Step 8: Test the App
+
+1. Create a new order using the form on the frontend.
+
+2. Check the server logs to see if the webhook event is received and logged.
+
+3. Verify that the order details are displayed correctly on the frontend.
+
+### Step 9: Deploy the App
+
+1. Deploy the app to a hosting service of your choice (e.g., Heroku, Vercel, AWS).
+
+2. Update the webhook URL in your [dashboard settings](https://app.paycrest.io/sender/settings) to point to your deployed app.
+
+3. Test the app in the production environment to ensure everything works as expected.
+
+### Step 10: Submit for Review
+
+1. Create a Dropbox link to your project repository.
+
+2. Submit the Dropbox link for review.
+
+Congratulations! You have successfully built a payment app using the Sender API. You can now enable off-ramp for users in your community.
+
+For more information and detailed documentation, visit the [Paycrest Documentation](https://docs.paycrest.io/).
+
+## Demo App Repository
+
+You can find the complete code for the demo app in the following repository:
+
+[Demo App Repository](https://github.com/paycrest/demo-payment-app)
