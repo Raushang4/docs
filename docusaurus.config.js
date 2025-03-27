@@ -1,5 +1,3 @@
-// @ts-check
-
 import {themes as prismThemes} from 'prism-react-renderer';
 
 /** @type {import('@docusaurus/types').Config} */
@@ -54,4 +52,15 @@ export default {
       darkTheme: prismThemes.dracula,
     },
   },
+  plugins: [
+    [
+      '@docusaurus/plugin-content-docs',
+      {
+        id: 'bonadocs',
+        path: 'bonadocs',
+        routeBasePath: 'bonadocs',
+        sidebarPath: require.resolve('./sidebars.js'),
+      },
+    ],
+  ],
 };

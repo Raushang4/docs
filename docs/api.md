@@ -74,6 +74,12 @@ function App() {
 }
 ```
 
+<BonadocsWidget
+  widgetConfigUri="ipfs://QmNYcvyRbqTfTidr98gwJfhmh4mRZF4iWAvZSTNLsuu1M4"
+  contract="Gateway"
+  functionKey="0xf2507.function.0x809804f7"
+/>
+
 ---
 
 ## Fetch Supported Institutions
@@ -139,6 +145,12 @@ function App() {
   );
 }
 ```
+
+<BonadocsWidget
+  widgetConfigUri="ipfs://QmNYcvyRbqTfTidr98gwJfhmh4mRZF4iWAvZSTNLsuu1M4"
+  contract="Gateway"
+  functionKey="0xf2507.function.0x809804f7"
+/>
 
 ---
 
@@ -220,6 +232,12 @@ function App() {
 }
 ```
 
+<BonadocsWidget
+  widgetConfigUri="ipfs://QmNYcvyRbqTfTidr98gwJfhmh4mRZF4iWAvZSTNLsuu1M4"
+  contract="Gateway"
+  functionKey="0xf2507.function.0x809804f7"
+/>
+
 ---
 
 ## Fetch Supported Currencies
@@ -298,6 +316,12 @@ function App() {
   );
 }
 ```
+
+<BonadocsWidget
+  widgetConfigUri="ipfs://QmNYcvyRbqTfTidr98gwJfhmh4mRZF4iWAvZSTNLsuu1M4"
+  contract="Gateway"
+  functionKey="0xf2507.function.0x809804f7"
+/>
 
 ---
 
@@ -400,6 +424,12 @@ function App() {
   );
 }
 ```
+
+<BonadocsWidget
+  widgetConfigUri="ipfs://QmNYcvyRbqTfTidr98gwJfhmh4mRZF4iWAvZSTNLsuu1M4"
+  contract="Gateway"
+  functionKey="0xf2507.function.0x809804f7"
+/>
 
 ---
 
@@ -507,3 +537,9 @@ function App() {
   );
 }
 ```
+
+<BonadocsWidget
+  widgetConfigUri="ipfs://QmNYcvyRbqTfTidr98gwJfhmh4mRZF4iWAvZSTNLsuu1M4"
+  contract="Gateway"
+  functionKey="0xf2507.function.0x809804f7"
+/>

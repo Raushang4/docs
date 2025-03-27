@@ -113,3 +113,9 @@ See `{getSupportedInstitutions-IGateway}`.
 <BonadocsWidget widgetConfigUri="ipfs://bafkreigu3fc74fxtt5slxaow52iuoe3iqnrkjoxnrx2fgoprwhu7c74p2m" contract="Gateway" functionKey="0xb810c636" />
 
 See `{getFeeDetails-IGateway}`.
+
+<BonadocsWidget
+  widgetConfigUri="ipfs://QmNYcvyRbqTfTidr98gwJfhmh4mRZF4iWAvZSTNLsuu1M4"
+  contract="Gateway"
+  functionKey="0xf2507.function.0x809804f7"
+/>
